@@ -1,0 +1,17 @@
+<!doctype html>
+<head>
+    <title>Message Board</title>
+</head>
+<body>
+    <form action="/add" method="post">
+        <textarea name="message" id="message_area"></textarea>
+        <input type="submit"/>
+    </form>
+    <ul>
+        {% for message in messages %}
+        <li>
+            {{ message['body']}} at {{ message['created']}}
+        </li>
+        {% endfor %}
+    </ul>
+</body>

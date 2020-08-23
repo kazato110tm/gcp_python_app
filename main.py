@@ -13,18 +13,28 @@
 # limitations under the License.
 
 # [START app]
+
 import logging
+from flask import Flask, redirect, request, render_template
+from google.appengine.ext import ndb
 
-from flask import Flask
-
+class Message(ndb.Model):
+    body = ndb.StringProperty()
+    created = ndb.DateTimeProperty(auto_now_add=True)
 
 app = Flask(__name__)
 
-
 @app.route('/')
 def hello():
-    return 'Hello World!'
+    messages = Message.query().fetch()
+    return render_template('hello.html', messages=messages)
 
+@app.route('/add', methods=['POST'])
+def add_message():
+    message_body = request.form.get('message', '')
+    message = Message(body=message_body)
+    message.put()
+    return redirect('/')
 
 @app.errorhandler(500)
 def server_error(e):
